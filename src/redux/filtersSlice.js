@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const filtersInitialState = {
   value: "",
 };
+
 const filtersSlice = createSlice({
   name: "filters",
   initialState: filtersInitialState,

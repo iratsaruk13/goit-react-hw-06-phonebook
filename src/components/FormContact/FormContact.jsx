@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -11,6 +10,9 @@ import {
   FormContactBtn,
 } from "./FormContact.styled";
 import { FcPlus } from "react-icons/fc";
+import { useDispatch, useSelector } from "react-redux";
+import { getContacts } from "../../redux/selectors";
+import { addContacts } from "../../redux/contactsSlice";
 
 const phoneValidation =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -24,7 +26,10 @@ const schema = Yup.object().shape({
     .matches(phoneValidation, "The number must consist of digits"),
 });
 
-export const FormContact = ({ addContact }) => {
+export const FormContact = () => {
+  const contact = useSelector(getContacts);
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -37,6 +42,30 @@ export const FormContact = ({ addContact }) => {
   const onSubmit = (data) => {
     addContact(data.name, data.number);
     reset();
+  };
+
+  const normalizedNumber = (number) => {
+    let normalizedNumber = number.substring(0, 3) + "-";
+    for (let i = 3; i < number.length; i += 1) {
+      if ((i - 3) % 2 === 0 && i !== 3) {
+        normalizedNumber += "-";
+      }
+      normalizedNumber += number[i];
+    }
+    return normalizedNumber;
+  };
+
+  const addContact = (name, number) => {
+    const formattedNumber = normalizedNumber(number);
+
+    const checkName = contact.some(
+      (el) => el.name.toLowerCase() === name.toLowerCase()
+    );
+    if (checkName) {
+      return alert(`${name} is already in contacts.`);
+    }
+
+    dispatch(addContacts(name, formattedNumber));
   };
 
   return (
@@ -56,8 +85,4 @@ export const FormContact = ({ addContact }) => {
       </FormContactBtn>
     </StyledForm>
   );
-};
-
-FormContact.propTypes = {
-  addContact: PropTypes.func.isRequired,
 };

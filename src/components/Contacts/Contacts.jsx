@@ -1,19 +1,37 @@
 import React from "react";
-import PropTypes from "prop-types";
 import {
   ContactsList,
   ContactsItem,
   ContactsName,
   ContactsButton,
 } from "./Contacts.styled";
-
 import { BsTrash3 } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { getContacts, getFilters } from "../../redux/selectors";
+import { removeContact } from "../../redux/contactsSlice";
 
-export const Contacts = ({ options, deleteContact }) => {
+export const Contacts = () => {
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilters);
+  const dispatch = useDispatch();
+
+  const getContact = () => {
+    const normalized = filter.toLowerCase();
+    return contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(normalized)
+    );
+  };
+
+  const deleteContact = (id) => {
+    dispatch(removeContact(id));
+  };
+
+  const filteredContacts = getContact();
+
   return (
     <>
       <ContactsList>
-        {options.map(({ id, name, number }) => {
+        {filteredContacts.map(({ id, name, number }) => {
           return (
             <ContactsItem key={id}>
               <ContactsName>
@@ -28,9 +46,4 @@ export const Contacts = ({ options, deleteContact }) => {
       </ContactsList>
     </>
   );
-};
-
-Contacts.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };
