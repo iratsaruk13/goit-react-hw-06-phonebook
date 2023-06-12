@@ -61,4 +61,3 @@ export const FormContact = ({ addContact }) => {
 FormContact.propTypes = {
   addContact: PropTypes.func.isRequired,
 };
-

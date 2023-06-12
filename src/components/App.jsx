@@ -34,10 +34,6 @@ export const App = () => {
     dispatch(addContacts(name, formattedNumber));
   };
 
-  const onChangeFilter = (evt) => {
-    dispatch(setFilter(evt.currentTarget.value));
-  };
-
   const getContact = () => {
     const normalized = filter.toLowerCase();
     return contacts.filter((contact) =>
@@ -47,6 +43,10 @@ export const App = () => {
 
   const deleteContact = (id) => {
     dispatch(removeContact(id));
+  };
+
+  const onChangeFilter = (evt) => {
+    dispatch(setFilter(evt.currentTarget.value));
   };
 
   const filteredContacts = getContact();
