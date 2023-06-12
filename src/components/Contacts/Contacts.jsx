@@ -32,5 +32,5 @@ export const Contacts = ({ options, deleteContact }) => {
 
 Contacts.propTypes = {
   options: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  // removeContact: PropTypes.func.isRequired,
+  deleteContact: PropTypes.func.isRequired,
 };
