@@ -1,22 +1,16 @@
-import { useState, useEffect } from "react";
-import { nanoid } from "nanoid";
 import { Container, MainTitle, ContactsTitle, Message } from "./App.styled";
 import { FormContact } from "./FormContact/FormContact";
 import { Contacts } from "./Contacts/Contacts";
 import { FormFilter } from "./Filter/Filter";
-import initialContacts from "./contacts.json";
-
-const CONTACTS_KEY = "contacts";
+import { useDispatch, useSelector } from "react-redux";
+import { addContacts, removeContact } from "../redux/contactsSlice";
+import { getContacts, getFilters } from "../redux/selectors";
+import { setFilter } from "../redux/filtersSlice";
 
 export const App = () => {
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem(CONTACTS_KEY)) ?? initialContacts
-  );
-  const [filter, setFilter] = useState("");
-
-  useEffect(() => {
-    localStorage.setItem(CONTACTS_KEY, JSON.stringify(contacts));
-  }, [contacts]);
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilters);
 
   const normalizedNumber = (number) => {
     let normalizedNumber = number.substring(0, 3) + "-";
@@ -37,34 +31,25 @@ export const App = () => {
     if (checkName) {
       return alert(`${name} is already in contacts.`);
     }
-
-    const contact = {
-      id: nanoid(),
-      name: name,
-      number: formattedNumber,
-    };
-
-    setContacts((prevContacts) => [...prevContacts, contact]);
+    dispatch(addContacts(name, formattedNumber));
   };
 
   const onChangeFilter = (evt) => {
-    setFilter(evt.currentTarget.value);
+    dispatch(setFilter(evt.currentTarget.value));
   };
 
-  const getContacts = () => {
+  const getContact = () => {
     const normalized = filter.toLowerCase();
     return contacts.filter((contact) =>
       contact.name.toLowerCase().includes(normalized)
     );
   };
 
-  const removeContact = (id) => {
-    setContacts((prevContacts) =>
-      prevContacts.filter((contact) => contact.id !== id)
-    );
+  const deleteContact = (id) => {
+    dispatch(removeContact(id));
   };
 
-  const filteredContacts = getContacts();
+  const filteredContacts = getContact();
 
   return (
     <Container>
@@ -76,7 +61,7 @@ export const App = () => {
       {contacts.length === 0 ? (
         <Message>You don't have contacts yet</Message>
       ) : (
-        <Contacts options={filteredContacts} removeContact={removeContact} />
+        <Contacts options={filteredContacts} deleteContact={deleteContact} />
       )}
     </Container>
   );

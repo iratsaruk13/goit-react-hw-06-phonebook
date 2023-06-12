@@ -8,6 +8,7 @@ export const ContactsList = styled.ul`
 export const ContactsItem = styled.li`
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 export const ContactsName = styled.p`
   color: #300339;
@@ -19,7 +20,6 @@ export const ContactsButton = styled.button`
   font-weight: 500;
   color: #300339;
   background-color: #e1bbe3;
-  margin: 0 auto;
   width: 100px;
   border-radius: 10px;
   border: none;

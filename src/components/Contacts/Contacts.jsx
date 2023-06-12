@@ -9,7 +9,7 @@ import {
 
 import { BsTrash3 } from "react-icons/bs";
 
-export const Contacts = ({ options, removeContact }) => {
+export const Contacts = ({ options, deleteContact }) => {
   return (
     <>
       <ContactsList>
@@ -19,7 +19,7 @@ export const Contacts = ({ options, removeContact }) => {
               <ContactsName>
                 {name}: {number}
               </ContactsName>
-              <ContactsButton type="button" onClick={() => removeContact(id)}>
+              <ContactsButton type="button" onClick={() => deleteContact(id)}>
                 <BsTrash3 />
               </ContactsButton>
             </ContactsItem>
@@ -32,5 +32,5 @@ export const Contacts = ({ options, removeContact }) => {
 
 Contacts.propTypes = {
   options: PropTypes.arrayOf(PropTypes.shape).isRequired,
-  removeContact: PropTypes.func.isRequired,
+  // removeContact: PropTypes.func.isRequired,
 };
